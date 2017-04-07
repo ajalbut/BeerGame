@@ -32,7 +32,7 @@ class UserObserver extends ReLogoObserver{
 			fulfillOrder()
 			makeOrder()
 		}
-		ask(chainLevels()){ updateSent() }
+		ask(chainLevels()){ updateState() }
 	}
 
 	def getFactoryStock(){

@@ -16,17 +16,18 @@ class ChainLevel extends ReLogoTurtle {
 	static float ALPHA = 0.5
 	static float BETA = 1.0
 	static float THETA = 0.5
-	static float desiredStock = 12
 
+	float desiredStock = 12
 	float desiredPipeline = 8
+	float Q
 	float currentStock
-	float ordersToFulfill
+	float lastOrdersToFulfill
 	float lastOrderSent
 	float lastShipmentSent
+	float expectedDemand
+	float ordersToFulfill
 	float orderSent
 	float shipmentSent
-	float expectedDemand
-	float Q
 
 	def upstreamLevel
 	def downstreamLevel
@@ -34,14 +35,14 @@ class ChainLevel extends ReLogoTurtle {
 	def pipeline = []
 
 	def setup(){
-		this.currentStock = this.desiredStock
-		this.ordersToFulfill = 4.0
+		this.Q = this.desiredStock + this.BETA * this.desiredPipeline
+		this.currentStock = 12.0
+		this.lastOrdersToFulfill = 0.0
 		this.lastOrderSent = 4.0
 		this.lastShipmentSent = 4.0
+		this.expectedDemand = 4.0
 		this.orderSent = 0.0
 		this.shipmentSent = 0.0
-		this.expectedDemand = 4.0
-		this.Q = this.desiredStock + this.BETA * this.desiredPipeline
 	}
 
 	def receiveShipment(){
@@ -50,7 +51,7 @@ class ChainLevel extends ReLogoTurtle {
 	}
 
 	def receiveOrder(){
-		this.ordersToFulfill += this.downstreamLevel.lastOrderSent
+		this.ordersToFulfill = this.lastOrdersToFulfill + this.downstreamLevel.lastOrderSent
 	}
 
 	def fulfillOrder(){
@@ -66,13 +67,18 @@ class ChainLevel extends ReLogoTurtle {
 	}
 
 	def makeOrder(){
+		float supplyLine = this.pipeline.sum()
+		if (this.upstreamLevel) {
+			supplyLine += this.upstreamLevel.lastOrdersToFulfill
+		}
 		this.expectedDemand = this.THETA * this.lastShipmentSent + (1 - this.THETA) * this.expectedDemand
-		float totalOrder = this.expectedDemand + this.ALPHA * (this.Q - this.currentStock - this.BETA * this.pipeline.sum())
+		float totalOrder = this.expectedDemand + this.ALPHA * (this.Q - this.currentStock - this.BETA * supplyLine)
 		this.orderSent =  Math.max(0, totalOrder)
 	}
 
-	def updateSent(){
+	def updateState(){
 		this.lastOrderSent = this.orderSent
 		this.lastShipmentSent = this.shipmentSent
+		this.lastOrdersToFulfill = this.ordersToFulfill
 	}
 }
