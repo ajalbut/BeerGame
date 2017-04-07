@@ -14,14 +14,14 @@ import repast.simphony.relogo.schedule.Setup
 @Plural ("Factories")
 class Factory extends ChainLevel {
 	def setup(){
-		this.desiredPipeline = 12
-		pipeline = [4.0, 4.0, 4.0]
+		this.desiredSupplyLine = 12
+		productPipeline = [4.0, 4.0, 4.0]
 		this.downstreamLevel = distributors().take(1)
 		super.setup()
 	}
 
 	def receiveShipment(){
-		this.pipeline.add(this.lastOrderSent)
-		this.currentStock += this.pipeline.pop()
+		this.productPipeline.add(this.lastOrderSent)
+		this.currentStock += this.productPipeline.pop()
 	}
 }
