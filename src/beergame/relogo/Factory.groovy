@@ -21,6 +21,7 @@ class Factory extends ChainLevel {
 	}
 
 	def receiveShipment(){
+		this.productPipeline = this.lastProductPipeline
 		this.productPipeline.add(this.lastOrderSent)
 		this.currentStock += this.productPipeline.pop()
 	}
