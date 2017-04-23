@@ -29,8 +29,8 @@ class ChainLevel extends ReLogoTurtle {
 	float orderSent
 	float shipmentSent
 
-	def upstreamLevel
-	def downstreamLevel
+	ChainLevel upstreamLevel
+	ChainLevel downstreamLevel
 
 	def lastProductPipeline
 	def lastOrderPipeline
@@ -52,13 +52,13 @@ class ChainLevel extends ReLogoTurtle {
 
 	def receiveShipment(){
 		this.productPipeline = this.lastProductPipeline
-		this.productPipeline.add(this.upstreamLevel.lastShipmentSent)
+		this.productPipeline.add(0, this.upstreamLevel.lastShipmentSent)
 		this.currentStock += this.productPipeline.pop()
 	}
 
 	def receiveOrder(){
 		this.orderPipeline = this.lastOrderPipeline
-		this.orderPipeline.add(this.downstreamLevel.lastOrderSent)
+		this.orderPipeline.add(0, this.downstreamLevel.lastOrderSent)
 		this.ordersToFulfill = this.lastOrdersToFulfill + this.orderPipeline.pop()
 	}
 

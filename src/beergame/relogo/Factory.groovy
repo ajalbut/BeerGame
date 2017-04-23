@@ -16,13 +16,13 @@ class Factory extends ChainLevel {
 	def setup(){
 		this.desiredSupplyLine = 12
 		productPipeline = [4.0, 4.0, 4.0]
-		this.downstreamLevel = distributors().take(1)
+		this.downstreamLevel = distributors()[0]
 		super.setup()
 	}
 
 	def receiveShipment(){
 		this.productPipeline = this.lastProductPipeline
-		this.productPipeline.add(this.lastOrderSent)
+		this.productPipeline.add(0, this.lastOrderSent)
 		this.currentStock += this.productPipeline.pop()
 	}
 }
