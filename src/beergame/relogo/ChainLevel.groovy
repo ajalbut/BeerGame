@@ -18,8 +18,6 @@ class ChainLevel extends ReLogoTurtle {
 	static float THETA = 0.5
 
 	float desiredStock = 12
-	float desiredSupplyLine = 12
-	float Q
 	float currentStock
 	float lastOrdersToFulfill
 	float lastOrderSent
@@ -38,7 +36,6 @@ class ChainLevel extends ReLogoTurtle {
 	def orderPipeline = [4.0]
 
 	def setup(){
-		this.Q = this.desiredStock + this.BETA * this.desiredSupplyLine
 		this.currentStock = 12.0
 		this.lastOrdersToFulfill = 0.0
 		this.lastOrderSent = 4.0
@@ -80,7 +77,9 @@ class ChainLevel extends ReLogoTurtle {
 			supplyLine = supplyLine + this.upstreamLevel.lastOrdersToFulfill + this.upstreamLevel.lastOrderPipeline.sum()
 		}
 		this.expectedDemand = this.THETA * this.lastShipmentSent + (1 - this.THETA) * this.expectedDemand
-		float totalOrder = this.expectedDemand + this.ALPHA * (this.Q - this.currentStock - this.BETA * supplyLine)
+		float desiredSupplyLine = 3 * this.expectedDemand
+		float Q = this.desiredStock + this.BETA * desiredSupplyLine
+		float totalOrder = this.expectedDemand + this.ALPHA * (Q - this.currentStock - this.BETA * supplyLine)
 		this.orderSent =  Math.max(0, totalOrder)
 	}
 
