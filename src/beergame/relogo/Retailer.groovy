@@ -20,13 +20,13 @@ class Retailer extends ChainLevel {
 
 	def receiveOrder(){}
 
-	def fullfillOrder(){}
+	def fulfillOrder(){}
 
 	def makeOrder(){
 		if (ticks() >= 4) {
-			this.orderSent = 8
+			this.orderSent = 8.0
 		} else {
-			this.orderSent = 4
+			this.orderSent = 4.0
 		}
 	}
 }
